@@ -1,6 +1,6 @@
-import { PrismaClient } from '@prisma/client';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { PrismaClient } from "@prisma/client";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,7 @@ export async function GET() {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user?.email) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
     });
   }
@@ -18,16 +18,16 @@ export async function GET() {
   });
 
   if (!user) {
-    return new Response(JSON.stringify({ error: 'User not found' }), {
+    return new Response(JSON.stringify({ error: "User not found" }), {
       status: 404,
     });
   }
 
-  console.log('📊 Pack Status Debug:');
+  console.log("📊 Pack Status Debug:");
   console.log(
-    'DB nextPackAt (already Malaysia):',
-    user.nextPackAt.toLocaleString('en-US', {
-      timeZone: 'Asia/Kuala_Lumpur',
+    "DB nextPackAt (already Malaysia):",
+    user.nextPackAt.toLocaleString("en-US", {
+      timeZone: "Asia/Kuala_Lumpur",
     })
   );
 
