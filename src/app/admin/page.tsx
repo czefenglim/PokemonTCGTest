@@ -404,7 +404,7 @@ export default function AdminPage() {
             >
               <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
                 <span className="text-2xl">📊</span>
-                Today's Summary
+                Today&apos;s Summary
               </h3>
 
               <div className="space-y-6">
@@ -433,7 +433,7 @@ export default function AdminPage() {
                       💰
                     </div>
                     <div>
-                      <p className="text-white font-medium">Today's Revenue</p>
+                      <p className="text-white font-medium">Today&apos;s Revenue</p>
                       <p className="text-white/60 text-sm">
                         Total earnings today
                       </p>

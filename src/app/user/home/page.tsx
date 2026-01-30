@@ -6,6 +6,7 @@ import { SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid';
 import FeatureSection from '@/components/FeatureSection';
 import AvatarPickerModal from '@/components/AvatarPickerModal';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 export default function HomePage() {
   const { data: session, status } = useSession();
@@ -96,7 +97,7 @@ export default function HomePage() {
         <h1 className="text-xl font-bold">
           {`Welcome back, ${session?.user?.name || 'Trainer'}!`}
         </h1>
-        <img
+        <Image
           src={avatarUrl}
           alt="Avatar"
           className="w-9 h-9 rounded-full border-2 border-yellow-400 cursor-pointer"
@@ -142,21 +143,21 @@ export default function HomePage() {
           {/* Pokémon Images */}
           <div className="relative flex-shrink-0 flex items-end mt-6 md:mt-0 z-0 overflow-visible">
             <div className="relative w-36 md:w-48 lg:w-56 z-30 animate-float">
-              <img
+              <Image
                 src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png"
                 alt="Charizard"
                 className="w-full h-auto object-contain drop-shadow-2xl"
               />
             </div>
             <div className="relative w-28 md:w-36 lg:w-44 -ml-6 z-20 translate-y-3 animate-float-slower">
-              <img
+              <Image
                 src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png"
                 alt="Gengar"
                 className="w-full h-auto object-contain drop-shadow-xl"
               />
             </div>
             <div className="relative w-24 md:w-32 lg:w-40 -ml-6 z-10 -translate-y-2 animate-float-faster">
-              <img
+              <Image
                 src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png"
                 alt="Snorlax"
                 className="w-full h-auto object-contain drop-shadow-xl"

@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import { useState } from 'react';
 
 type Card = {
@@ -63,7 +64,7 @@ export default function PvPPage() {
 
       {/* Opponent Area */}
       <div className="mb-6 border border-yellow-500 rounded p-4">
-        <h2 className="text-lg font-semibold mb-2">Opponent's Board</h2>
+        <h2 className="text-lg font-semibold mb-2">Opponent&apos;s Board</h2>
         <div className="flex gap-2">
           <div className="w-16 h-24 bg-gray-700 rounded"></div>
           <div className="w-16 h-24 bg-gray-700 rounded"></div>
@@ -76,7 +77,7 @@ export default function PvPPage() {
         <h2 className="text-lg font-semibold mb-2">Your Board</h2>
         <div className="flex gap-2">
           {board.map((card) => (
-            <img
+            <Image
               key={card.id}
               src={card.image}
               alt={card.name}
@@ -97,7 +98,7 @@ export default function PvPPage() {
               disabled={turn !== 'player'}
               className="flex flex-col items-center hover:scale-105 transition"
             >
-              <img src={card.image} alt={card.name} className="w-24 rounded" />
+              <Image src={card.image} alt={card.name} className="w-24 rounded" />
               <span className="text-sm mt-1">{card.name}</span>
             </button>
           ))}

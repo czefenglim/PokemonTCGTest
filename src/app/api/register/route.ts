@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   let body;
   try {
     body = await req.json();
-  } catch (e) {
+  } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON format' }), {
       status: 400,
     });

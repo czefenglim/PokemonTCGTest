@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function BattleScreen() {
   const [message, setMessage] = useState('What will Snivy do?');
@@ -54,7 +55,7 @@ export default function BattleScreen() {
             ></div>
           </div>
         </div>
-        <img
+        <Image
           src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/197.png"
           alt="Umbreon"
           className={`w-28 h-28 ${isAttacking ? 'animate-ping' : ''}`}
@@ -63,7 +64,7 @@ export default function BattleScreen() {
 
       {/* Player */}
       <div className="flex justify-between items-center bg-gray-900 p-4 rounded mt-8">
-        <img
+        <Image
           src={
             activePokemon === 'Snivy'
               ? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/495.png'

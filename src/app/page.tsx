@@ -6,32 +6,40 @@ import {
   useTransform,
   animate,
   useScroll,
-  useSpring,
 } from 'framer-motion';
 import { useEffect, useState, useRef } from 'react';
 import FloatingParticles from '@/components/FloatingParticles';
 import Link from 'next/link';
 
-export default function CyberPokemonLanding() {
-  const [currentCard, setCurrentCard] = useState(0);
-  const [glitchEffect, setGlitchEffect] = useState(false);
-  const [pokemonData, setPokemonData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [hoveredCard, setHoveredCard] = useState(null);
-  const containerRef = useRef(null);
-  const { scrollYProgress } = useScroll();
+// Enhanced cyber cards data
+interface CyberCard {
+  id: number;
+  name: string;
+  type: string;
+  rarity: string;
+  price: string;
+  trend: string;
+}
 
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, Math.round);
-  const trades = useMotionValue(24000);
-  const tradesRounded = useTransform(
-    trades,
-    (v) => `${Math.round(v / 1000)}K+`
-  );
+interface PokeAPIStat {
+  base_stat: number;
+  stat: {
+    name: string;
+  };
+}
 
-  // Enhanced cyber cards data
-  const cyberCards = [
+interface PokeAPIAbility {
+  ability: {
+    name: string;
+  };
+}
+
+interface PokemonData extends CyberCard {
+  image?: string;
+  stats?: Record<string, number>;
+  abilities?: string[];
+}
+  const _cyberCards = [
     {
       id: 6,
       name: 'CYBERZARD',
@@ -66,9 +74,29 @@ export default function CyberPokemonLanding() {
     },
   ];
 
+export default function CyberPokemonLanding() {
+  const [currentCard, setCurrentCard] = useState(0);
+
+  const [pokemonData, setPokemonData] = useState<PokemonData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, Math.round);
+  const trades = useMotionValue(24000);
+  const tradesRounded = useTransform(
+    trades,
+    (v) => `${Math.round(v / 1000)}K+`
+  );
+
+  const cyberCards = _cyberCards;
+
   // Mouse tracking
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
     window.addEventListener('mousemove', handleMouseMove);
@@ -89,11 +117,11 @@ export default function CyberPokemonLanding() {
             return {
               ...card,
               image: pokemon.sprites.other['official-artwork'].front_default,
-              stats: pokemon.stats.reduce((acc, stat) => {
+              stats: pokemon.stats.reduce((acc: Record<string, number>, stat: PokeAPIStat) => {
                 acc[stat.stat.name] = stat.base_stat;
                 return acc;
               }, {}),
-              abilities: pokemon.abilities.map((a) => a.ability.name),
+              abilities: pokemon.abilities.map((a: PokeAPIAbility) => a.ability.name),
             };
           })
         );
@@ -114,7 +142,7 @@ export default function CyberPokemonLanding() {
     };
 
     fetchPokemonData();
-  }, []);
+  }, [cyberCards]);
 
   // Animated counters
   useEffect(() => {
@@ -132,10 +160,10 @@ export default function CyberPokemonLanding() {
 
     const interval = setInterval(() => {
       if (pokemonData.length > 0) {
-        setGlitchEffect(true);
+       
         setTimeout(() => {
           setCurrentCard((prev) => (prev + 1) % pokemonData.length);
-          setGlitchEffect(false);
+      
         }, 300);
       }
     }, 3000);
@@ -143,7 +171,7 @@ export default function CyberPokemonLanding() {
   }, [pokemonData, hoveredCard]);
 
   // Helper functions
-  function getRarityClass(rarity) {
+  function getRarityClass(rarity: string) {
     switch (rarity) {
       case 'LEGENDARY':
         return 'bg-gradient-to-r from-yellow-500 to-yellow-700 text-yellow-100';
@@ -158,7 +186,7 @@ export default function CyberPokemonLanding() {
     }
   }
 
-  function getTypeColor(type) {
+  function getTypeColor(type: string) {
     switch (type) {
       case 'FIRE':
         return '#ef4444';
@@ -173,7 +201,7 @@ export default function CyberPokemonLanding() {
     }
   }
 
-  function getTypeGradient(type) {
+  function getTypeGradient(type: string) {
     switch (type) {
       case 'FIRE':
         return 'rgba(239, 68, 68, 0.5), rgba(252, 165, 165, 0.3)';
@@ -593,7 +621,7 @@ export default function CyberPokemonLanding() {
                               animate={{ opacity: 1, y: 0 }}
                               className="flex gap-2 flex-wrap"
                             >
-                              {card.abilities.slice(0, 2).map((ability, i) => (
+                              {card.abilities!.slice(0, 2).map((ability, i) => (
                                 <span
                                   key={i}
                                   className="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 rounded-lg border border-purple-500/30"

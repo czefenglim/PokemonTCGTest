@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 // ✅ Define a TypeScript type for a card
 type Card = {
@@ -45,11 +46,11 @@ export default function Home() {
     <main className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
       {cards.map((card) => (
         <div key={card.id} className="bg-white rounded shadow p-2">
-          <img
+          <Image
             src={card.images.small}
             alt={card.name}
             className="w-full mb-2"
-          />
+          /> 
           <h2 className="text-lg font-bold">{card.name}</h2>
           <p className="text-sm text-gray-600">HP: {card.hp}</p>
           <p className="text-sm">{card.rarity}</p>

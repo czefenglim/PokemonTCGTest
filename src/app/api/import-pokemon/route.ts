@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export async function GET(request) {
+export async function GET() {
   const pokemonIds = Array.from({ length: 151 }, (_, i) => i + 1);
 
   for (const id of pokemonIds) {

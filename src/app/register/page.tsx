@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
@@ -99,12 +100,13 @@ export default function RegisterPage() {
         body: JSON.stringify({ username, email, password }),
       });
 
-      let data: any = {};
+      let data: any = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
 
       try {
         data = await res.clone().json();
       } catch (err) {
         console.warn('Failed to parse JSON body');
+        console.error(err);
       }
 
       if (!res.ok) {
@@ -341,7 +343,7 @@ export default function RegisterPage() {
           <div className="absolute top-1/4 left-1/4 w-36 h-36 animate-float-slow">
             <div className="relative w-full h-full">
               <div className="absolute inset-0 bg-yellow-400/30 rounded-full blur-xl animate-pulse"></div>
-              <img
+              <Image
                 src={pokemonSprite}
                 alt="Random Pokemon"
                 className="relative w-full h-full object-contain drop-shadow-2xl filter brightness-110"
@@ -357,11 +359,11 @@ export default function RegisterPage() {
                 className="absolute inset-0 bg-blue-400/30 rounded-full blur-xl animate-pulse"
                 style={{ animationDelay: '1s' }}
               ></div>
-              <img
+              <Image
                 src={pokemonSprite2}
                 alt="Random Pokemon 2"
                 className="relative w-full h-full object-contain drop-shadow-2xl filter brightness-110"
-              />
+              /> 
               <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/10 rounded-full"></div>
             </div>
           </div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import abi from '@/lib/pokemonCardABI.json';
 import pokemonList from '@/lib/pokemon-list.json';
+import Image from 'next/image';
 
 type OwnedCard = {
   tokenId: number;
@@ -33,7 +34,6 @@ export default function CollectionPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCard, setSelectedCard] = useState<OwnedCard | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [useMetadataAPI, setUseMetadataAPI] = useState(true);
 
   // SIMPLIFIED COLLECTION LOADING
   const loadCollection = async (userAddress: string) => {
@@ -53,10 +53,10 @@ export default function CollectionPage() {
       const tokenIds = pokemonList.map((p) => p.tokenId);
 
       // Try to get balances using getUserBalances first
-      let balances: any[] = [];
+      let balances: bigint[] | number[] = [];
       try {
         balances = await contract.getUserBalances(userAddress, tokenIds);
-      } catch (contractError) {
+      } catch (contractError: unknown) {
         console.warn(
           'getUserBalances failed, trying individual balanceOf calls...',
           contractError
@@ -132,7 +132,7 @@ export default function CollectionPage() {
 
       console.log(`📦 Loaded ${owned.length} owned cards`);
       setCards(owned);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('[Collection] Error loading collection:', err);
 
       // Only show error if we have an address (wallet is connected)
@@ -165,7 +165,7 @@ export default function CollectionPage() {
 
   useEffect(() => {
     checkConnection();
-  }, [useMetadataAPI]); // Reload when switching between API and JSON
+  }, [useMetadataAPI]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // UI HELPER FUNCTIONS
   const getRarityColor = (rarity: string) => {
@@ -529,7 +529,7 @@ export default function CollectionPage() {
                     Your Collection is Empty
                   </h3>
                   <p className="text-white/70 mb-6">
-                    You haven't collected any Pokémon cards yet. Start building
+                    You haven&apos;t collected any Pokémon cards yet. Start building
                     your legendary collection today!
                   </p>
                   <button
@@ -598,7 +598,7 @@ export default function CollectionPage() {
                           {/* Card Image */}
                           <div className="aspect-[3/4] relative overflow-hidden">
                             {card.imageUrl ? (
-                              <img
+                              <Image
                                 src={card.imageUrl}
                                 alt={card.name}
                                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
@@ -677,7 +677,7 @@ export default function CollectionPage() {
                       >
                         <div className="flex items-center gap-4">
                           {card.imageUrl ? (
-                            <img
+                            <Image
                               src={card.imageUrl}
                               alt={card.name}
                               className="w-16 h-20 object-cover rounded-lg"
@@ -755,7 +755,7 @@ export default function CollectionPage() {
               >
                 <div className="text-center">
                   {selectedCard.imageUrl ? (
-                    <img
+                    <Image
                       src={selectedCard.imageUrl}
                       alt={selectedCard.name}
                       className="w-full max-w-xs mx-auto rounded-2xl mb-4"

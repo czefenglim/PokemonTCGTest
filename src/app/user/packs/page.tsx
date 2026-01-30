@@ -6,6 +6,7 @@ import { ethers } from 'ethers';
 import { useAccount } from 'wagmi';
 import abi from '@/lib/pokemonCardABI.json';
 import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 
 const SUPPORTED_NETWORKS = [
   {
@@ -36,19 +37,32 @@ const SUPPORTED_NETWORKS = [
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     blockExplorerUrls: null,
   },
-];
+] as Network[];
+
+interface Network {
+  chainId: number;
+  chainName: string;
+  rpcUrls: string[];
+  nativeCurrency: {
+    name: string;
+    symbol: string;
+    decimals: number;
+  };
+  blockExplorerUrls: string[] | null;
+}
 
 const networkUtils = {
-  isCorrectNetwork: (chainId, targetId) => chainId === targetId,
+  isCorrectNetwork: (chainId: number, targetId: number) => chainId === targetId,
 
-  switchToNetwork: async (network) => {
+  switchToNetwork: async (network: Network) => {
     try {
       await window.ethereum.request({
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: `0x${network.chainId.toString(16)}` }],
       });
-    } catch (error) {
-      if (error.code === 4902) {
+    } catch (error: unknown) {
+      const err = error as { code: number };
+      if (err.code === 4902) {
         await window.ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [network],
@@ -61,7 +75,7 @@ const networkUtils = {
     }
   },
 
-  getNetworkName: (chainId) => {
+  getNetworkName: (chainId: number) => {
     const found = SUPPORTED_NETWORKS.find((n) => n.chainId === chainId);
     return found ? found.chainName : `Unknown Network (${chainId})`;
   },
@@ -85,11 +99,17 @@ function NetworkSwitchModal({
   onConfirm,
   onContinue,
   currentNetwork,
-  selectedNetwork,
   setSelectedNetwork,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  onContinue: () => void;
+  currentNetwork: string;
+  setSelectedNetwork: (n: Network) => void;
 }) {
   const [hasChangedNetwork, setHasChangedNetwork] = useState(false);
-  const [localSelectedNetwork, setLocalSelectedNetwork] = useState(null);
+  const [localSelectedNetwork, setLocalSelectedNetwork] = useState<Network | null>(null);
 
   // Reset the change tracking when modal opens
   useEffect(() => {
@@ -99,7 +119,7 @@ function NetworkSwitchModal({
     }
   }, [isOpen]);
 
-  const handleNetworkChange = (networkChainId) => {
+  const handleNetworkChange = (networkChainId: string) => {
     if (networkChainId === '') {
       // User selected the default "Choose network" option
       setLocalSelectedNetwork(null);
@@ -110,8 +130,10 @@ function NetworkSwitchModal({
     const newNetwork = SUPPORTED_NETWORKS.find(
       (net) => net.chainId === parseInt(networkChainId)
     );
-    setLocalSelectedNetwork(newNetwork);
-    setSelectedNetwork(newNetwork);
+    if (newNetwork) {
+      setLocalSelectedNetwork(newNetwork);
+      setSelectedNetwork(newNetwork);
+    }
 
     // Check if user changed from the current network
     const currentChainId = SUPPORTED_NETWORKS.find(
@@ -236,7 +258,7 @@ function NetworkSwitchModal({
                         Network Change Detected
                       </p>
                       <p className="text-orange-200/80 text-xs">
-                        You've selected{' '}
+                        You&apos;ve selected{' '}
                         <strong>{localSelectedNetwork.chainName}</strong>. Your
                         wallet will prompt you to switch networks before opening
                         the pack.
@@ -257,7 +279,7 @@ function NetworkSwitchModal({
                       Ready to Continue
                     </p>
                     <p className="text-green-200/80 text-xs">
-                      You'll continue on your current network. You can always
+                      You&apos;ll continue on your current network. You can always
                       switch later if needed.
                     </p>
                   </div>
@@ -354,7 +376,7 @@ function GemSpendingModal({ isOpen, onClose, onConfirm, gems, timeRemaining }) {
                 Skip Wait Time?
               </h3>
               <p className="text-gray-300 text-sm">
-                Your next free pack isn't ready yet
+                Your next free pack isn&apos;t ready yet
               </p>
             </div>
 
@@ -468,24 +490,31 @@ function GemSpendingModal({ isOpen, onClose, onConfirm, gems, timeRemaining }) {
   );
 }
 
+
+interface PackCard {
+  tokenId: string;
+  name: string;
+  image: string;
+  [key: string]: unknown;
+}
+
 export default function PacksPage() {
-  const [selectedNetwork, setSelectedNetwork] = useState(SUPPORTED_NETWORKS[0]);
+  const [selectedNetwork, setSelectedNetwork] = useState<Network>(SUPPORTED_NETWORKS[0]);
   const [nextPackAt, setNextPackAt] = useState<number | null>(null);
   const [gems, setGems] = useState(0);
-  const [cards, setCards] = useState<any[]>([]);
+  const [cards, setCards] = useState<PackCard[]>([]);
   const [revealed, setRevealed] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
-  const [resetCount, setResetCount] = useState(0);
+  const [, setResetCount] = useState(0);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
   const [initialLoading, setInitialLoading] = useState(true);
   const [showGemModal, setShowGemModal] = useState(false);
   const [showNetworkModal, setShowNetworkModal] = useState(false);
   const [connectedChainId, setConnectedChainId] = useState<number | null>(null);
   const [pendingPackOpen, setPendingPackOpen] = useState(false);
 
-  const { isConnected, chain } = useAccount();
+  const { isConnected } = useAccount();
   const { data: session, status: sessionStatus } = useSession();
 
   // Helper to get current Malaysia time (add 8 hours to UTC)
@@ -552,13 +581,7 @@ export default function PacksPage() {
       });
   }, [sessionStatus]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const malaysiaTime = getCurrentMalaysiaTime();
-      setCurrentTime(malaysiaTime.getTime());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+  
 
   // Function to actually open the pack (after network confirmation)
   const executePackOpen = async (forceOpen = false) => {
@@ -591,9 +614,9 @@ export default function PacksPage() {
           5,
           Date.now()
         );
-        randomIds = contractRandomIds.map((id: any) => Number(id));
+        randomIds = contractRandomIds.map((id: bigint) => Number(id));
         console.log('✅ Contract generated IDs:', randomIds);
-      } catch (contractError) {
+      } catch {
         console.log('Using API fallback generation');
       }
 
@@ -616,7 +639,7 @@ export default function PacksPage() {
       }
 
       const fetchedCards = data.cards;
-      const ids = fetchedCards.map((c: any) => BigInt(c.tokenId));
+      const ids = fetchedCards.map((c: PackCard) => BigInt(c.tokenId));
       const amounts = ids.map(() => BigInt(1));
 
       // ADD DEBUGGING HERE
@@ -730,34 +753,35 @@ export default function PacksPage() {
         setShowCelebration(false);
         setStatus(null);
       }, 3000);
-    } catch (err: any) {
+    } catch (err: unknown) { // Use unknown for better type safety
+      const error = err as { code?: string | number; message?: string; reason?: string };
       console.log('Pack opening process:', {
-        code: err.code,
-        message: err.message,
-        reason: err.reason,
+        code: error.code,
+        message: error.message,
+        reason: error.reason,
         type: 'pack_opening_error',
       });
 
       if (
-        err.code === 'ACTION_REJECTED' ||
-        err.code === 4001 ||
-        err.reason === 'rejected' ||
-        err.message?.toLowerCase().includes('user rejected') ||
-        err.message?.toLowerCase().includes('user denied') ||
-        err.message?.toLowerCase().includes('user denied transaction')
+        error.code === 'ACTION_REJECTED' ||
+        error.code === 4001 ||
+        error.reason === 'rejected' ||
+        error.message?.toLowerCase().includes('user rejected') ||
+        error.message?.toLowerCase().includes('user denied') ||
+        error.message?.toLowerCase().includes('user denied transaction')
       ) {
         setStatus(
           "🚫 Transaction cancelled - Feel free to try again whenever you're ready!"
         );
-      } else if (err.message?.toLowerCase().includes('insufficient funds')) {
+      } else if (error.message?.toLowerCase().includes('insufficient funds')) {
         setStatus(
           '💰 Insufficient funds - Please add some ETH to your wallet for gas fees'
         );
-      } else if (err.message?.toLowerCase().includes('network')) {
+      } else if (error.message?.toLowerCase().includes('network')) {
         setStatus(
           '🌐 Network connection issue - Please check your internet and try again'
         );
-      } else if (err.message?.toLowerCase().includes('failed to fetch')) {
+      } else if (error.message?.toLowerCase().includes('failed to fetch')) {
         setStatus(
           '📡 Connection timeout - Please check your network and try again'
         );
@@ -810,10 +834,11 @@ export default function PacksPage() {
     } catch (error) {
       console.error('Network switch failed:', error);
       setShowNetworkModal(false);
-      if (error.message === 'User rejected network switch') {
+      const err = error as Error;
+      if (err.message === 'User rejected network switch') {
         setStatus('❌ Network switch cancelled');
       } else {
-        setStatus(`❌ ${error.message}`);
+        setStatus(`❌ ${err.message}`);
       }
     }
   };
@@ -899,7 +924,7 @@ export default function PacksPage() {
         }}
         onConfirm={handleNetworkSwitch}
         onContinue={handleContinueWithCurrentNetwork}
-        currentNetwork={networkUtils.getNetworkName(connectedChainId)}
+        currentNetwork={networkUtils.getNetworkName(connectedChainId || 0)}
         selectedNetwork={selectedNetwork}
         setSelectedNetwork={setSelectedNetwork}
       />
@@ -1271,7 +1296,7 @@ export default function PacksPage() {
                       whileTap={{ scale: 0.95 }}
                       onClick={() =>
                         !isRevealed &&
-                        setRevealed((prev) => [...prev, card.tokenId])
+                        setRevealed((prev) => [...prev, Number(card.tokenId)])
                       }
                     >
                       {!isRevealed ? (
@@ -1336,9 +1361,11 @@ export default function PacksPage() {
                           transition={{ duration: 0.6 }}
                           className="w-full h-full relative"
                         >
-                          <img
-                            src={card.imageUrl}
+                          <Image
+                            src={String(card.imageUrl || card.image)}
                             alt={card.name}
+                            width={300}
+                            height={420}
                             className="w-full h-full object-cover rounded-xl"
                             onError={(e) => {
                               e.currentTarget.src =

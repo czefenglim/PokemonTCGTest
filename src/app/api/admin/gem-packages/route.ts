@@ -2,14 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
+
 
 /**
  * GET /api/admin/gem-packages
  * Returns a sorted list of all gem packages.
  * Access restricted to ADMIN users only.
  */
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions);
 
   // Ensure user is authenticated and has admin privileges
@@ -43,12 +43,13 @@ export async function POST(req: NextRequest) {
     const created = await prisma.gemPackage.create({ data });
 
     return NextResponse.json(created, { status: 201 });
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     // Handle duplicate stripeId
     if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002' &&
-      error.meta?.target?.includes('stripeId')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (error as any).code === 'P2002' &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (error as any).meta?.target?.includes('stripeId')
     ) {
       return NextResponse.json(
         { error: 'Stripe ID must be unique' },
@@ -87,12 +88,13 @@ export async function PUT(req: NextRequest) {
     });
 
     return NextResponse.json(updated);
-  } catch (error: any) {
+  } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     // Handle duplicate stripeId on update
     if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === 'P2002' &&
-      error.meta?.target?.includes('stripeId')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (error as any).code === 'P2002' &&
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (error as any).meta?.target?.includes('stripeId')
     ) {
       return NextResponse.json(
         { error: 'Stripe ID must be unique' },

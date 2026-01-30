@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import ConfirmLogoutModal from '@/components/ConfirmLogoutModal';
 import { getFeaturesForSidebar } from '@/lib/features-config';
+import Image from 'next/image';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -129,7 +130,7 @@ export default function Sidebar() {
 
           <div className="flex items-center gap-3 relative z-10 flex-1">
             <div className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg overflow-hidden bg-white/5">
-              <img
+              <Image
                 src="https://archives.bulbagarden.net/media/upload/f/f4/Pok%C3%A9Coin.png"
                 alt="Pokémon Logo"
                 className="w-full h-full object-contain"
@@ -259,7 +260,6 @@ export default function Sidebar() {
             {({
               account,
               chain,
-              openAccountModal,
               openConnectModal,
               authenticationStatus,
               mounted: connectButtonMounted,

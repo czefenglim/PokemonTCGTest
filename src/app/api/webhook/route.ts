@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import Stripe from 'stripe';
 import { headers } from 'next/headers';
 import { prisma } from '@/lib/prisma';
-import { buffer } from 'micro';
+
 
 export const config = {
   api: {
@@ -11,12 +11,12 @@ export const config = {
 };
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',
+  apiVersion: '2025-07-30.basil',
 });
 
 export async function POST(req: NextRequest) {
   const rawBody = await req.arrayBuffer();
-  const sig = headers().get('stripe-signature');
+  const sig = (await headers()).get('stripe-signature');
 
   console.log('🔔 Webhook received');
   console.log('🔐 Signature header:', sig);
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       process.env.STRIPE_WEBHOOK_SECRET!
     );
     console.log('✅ Webhook signature verified:', event.type);
-  } catch (err: any) {
+  } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
     console.error('❌ Webhook signature verification failed:', err.message);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
       });
 
       console.log(`✅ Gems added: ${gemPackage.amount} to user ${userId}`);
-    } catch (err: any) {
+    } catch (err: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
       console.error('❌ Error processing webhook logic:', err);
       return new Response('Internal server error', { status: 500 });
     }

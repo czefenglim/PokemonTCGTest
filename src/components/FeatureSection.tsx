@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getFeaturesForGrid } from '@/lib/features-config';
+import Image from 'next/image';
 
 export default function NFTGameFeatureSection() {
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -65,7 +66,7 @@ export default function NFTGameFeatureSection() {
               <div className="relative h-80 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden">
                 {/* Background Image */}
                 <div className="absolute inset-0">
-                  <img
+                  <Image
                     src={feature.image}
                     alt={feature.title}
                     className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"

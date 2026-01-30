@@ -1,5 +1,6 @@
 // app/marketplace/page.tsx
 'use client';
+import Image from 'next/image';
 import { useState } from 'react';
 
 type Card = {
@@ -47,7 +48,7 @@ export default function MarketplacePage() {
             key={card.id}
             className="bg-white/10 border border-yellow-400 rounded-xl p-4 flex flex-col items-center"
           >
-            <img
+            <Image
               src={card.images.small}
               alt={card.name}
               className="w-32 mb-2"

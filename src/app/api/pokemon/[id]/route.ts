@@ -45,7 +45,7 @@ function loadPokemonData(): PokemonCard[] {
 
 // Calculate strike power based on type and rarity
 function calculateStrikePower(pokemon: PokemonCard): number {
-  let basePower = 50;
+  const basePower = 50;
 
   // Type multipliers
   const typeMultiplier: Record<string, number> = {
@@ -313,7 +313,7 @@ export async function OPTIONS() {
       total: availableIds.length,
       pokemon: availableIds,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to load Pokemon list' },
       { status: 500 }

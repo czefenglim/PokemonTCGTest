@@ -3,6 +3,7 @@ import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { getSession } from 'next-auth/react';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
@@ -125,6 +126,7 @@ export default function LoginPage() {
     } catch (error) {
       setLoading(false);
       setError('An unexpected error occurred. Please try again.');
+      console.error(error);
     }
   }
 
@@ -368,11 +370,11 @@ export default function LoginPage() {
           <div className="absolute top-1/4 left-1/4 w-36 h-36 animate-float-slow">
             <div className="relative w-full h-full">
               <div className="absolute inset-0 bg-blue-400/30 rounded-full blur-xl animate-pulse"></div>
-              <img
+              <Image
                 src={pokemonSprite}
                 alt="Random Pokemon 1"
                 className="relative w-full h-full object-contain drop-shadow-2xl filter brightness-110"
-              />
+              /> 
               <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/10 rounded-full"></div>
             </div>
           </div>
@@ -384,11 +386,11 @@ export default function LoginPage() {
                 className="absolute inset-0 bg-purple-400/30 rounded-full blur-xl animate-pulse"
                 style={{ animationDelay: '1s' }}
               ></div>
-              <img
+              <Image
                 src={pokemonSprite2}
                 alt="Random Pokemon 2"
                 className="relative w-full h-full object-contain drop-shadow-2xl filter brightness-110"
-              />
+              /> 
               <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/10 rounded-full"></div>
             </div>
           </div>

@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function AvatarPickerModal({
   isOpen,
@@ -52,7 +53,7 @@ export default function AvatarPickerModal({
                 selected === url ? 'ring-4 ring-yellow-400' : ''
               }`}
             >
-              <img
+              <Image
                 src={url}
                 alt="Avatar"
                 className="w-20 h-20 rounded-full object-cover"

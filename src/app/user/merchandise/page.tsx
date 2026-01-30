@@ -1,22 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import {
   ShoppingCart,
   Star,
-  Package,
-  Shirt,
-  Gift,
   Sparkles,
   Heart,
   Filter,
   Search,
-  TrendingUp,
   Crown,
   Zap,
 } from 'lucide-react';
+import Image from 'next/image';
 
 type ProductType = 'clothing' | 'physical-pack' | 'bundle' | 'exclusive';
 
@@ -44,7 +40,6 @@ type Product = {
 };
 
 export default function MerchandiseStore() {
-  const router = useRouter();
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<{ id: string; quantity: number }[]>([]);
@@ -370,7 +365,7 @@ export default function MerchandiseStore() {
                   <Filter className="w-5 h-5 text-white/60" />
                   <select
                     value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as any)}
+                    onChange={(e) => setSortBy(e.target.value as any)} // eslint-disable-line @typescript-eslint/no-explicit-any
                     className="bg-white/10 border border-white/20 text-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400"
                   >
                     <option value="featured" className="bg-gray-800">
@@ -444,11 +439,11 @@ export default function MerchandiseStore() {
                     <div className="relative bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-white/20 hover:border-white/40 transition-all duration-300 h-full flex flex-col">
                       {/* Product Image */}
                       <div className="relative aspect-square overflow-hidden">
-                        <img
+                        <Image
                           src={product.image}
                           alt={product.name}
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                        />
+                        /> 
 
                         {/* Badges */}
                         <div className="absolute top-3 left-3 flex flex-col gap-2">
@@ -597,7 +592,7 @@ export default function MerchandiseStore() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Product Image */}
                     <div className="relative aspect-square rounded-2xl overflow-hidden">
-                      <img
+                      <Image
                         src={selectedProduct.image}
                         alt={selectedProduct.name}
                         className="w-full h-full object-cover"

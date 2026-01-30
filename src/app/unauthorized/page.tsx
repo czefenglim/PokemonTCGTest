@@ -1,4 +1,5 @@
-// app/unauthorized/page.tsx
+import Link from 'next/link';
+
 export default function UnauthorizedPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-900 via-red-700 to-red-600 text-white">
@@ -8,12 +9,12 @@ export default function UnauthorizedPage() {
         <p className="text-lg text-red-100">
           You do not have permission to view this page.
         </p>
-        <a
+        <Link
           href="/"
           className="inline-block mt-4 px-6 py-2 bg-white text-red-700 rounded-lg hover:bg-red-100 transition"
         >
           Go Back
-        </a>
+        </Link>
       </div>
     </div>
   );

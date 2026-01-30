@@ -21,16 +21,6 @@ interface GemPackage {
   updatedAt: string;
 }
 
-interface FormData {
-  amount: number;
-  priceCents: number;
-  stripeId: string;
-  badge: string;
-  popular: boolean;
-  active: boolean;
-  discountPercentage: number;
-  currency: string;
-}
 
 export default function AdminGemPackagesPage() {
   const { data: session, status } = useSession();
@@ -419,7 +409,7 @@ export default function AdminGemPackagesPage() {
                     </button>
 
                     <button
-                      onClick={() => handleDelete(pkg.id, `${pkg.amount} Gems`)}
+                      onClick={() => handleDelete(pkg.id)}
                       disabled={actionLoading === `delete-${pkg.id}`}
                       className="bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-red-200 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-300 disabled:opacity-50"
                     >

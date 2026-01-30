@@ -8,6 +8,7 @@ import {
   ShoppingBag,
   Trophy,
   Swords,
+  LucideIcon,
 } from 'lucide-react';
 
 export interface Feature {
@@ -18,7 +19,7 @@ export interface Feature {
   href: string;
   image: string;
   icon: string; // Emoji for feature cards
-  lucideIcon: any; // Lucide icon for sidebar
+  lucideIcon: LucideIcon; // Lucide icon for sidebar
   stats: { value: string; label: string };
   bgGradient: string;
   borderGradient: string;

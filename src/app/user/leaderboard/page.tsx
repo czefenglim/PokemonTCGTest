@@ -17,6 +17,125 @@ import {
   Eye,
   ArrowUp,
 } from 'lucide-react';
+import Image from 'next/image';
+
+// Enhanced mock data with more realistic profiles
+const leaderboardData = [
+  {
+    id: 1,
+    rank: 1,
+    username: 'StrikeMaster3000',
+    displayName: 'Strike Master',
+    avatar:
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=strike1&backgroundColor=1e40af',
+    totalStrikes: 15847,
+    winRate: 94.2,
+    level: 67,
+    title: '⚡ Lightning Champion',
+    isCurrentUser: false,
+    country: '🇺🇸',
+    streak: 156,
+    rankChange: 0,
+    lastSeen: '2 min ago',
+    badges: ['🏆', '⚡', '🔥'],
+    powerLevel: 9850,
+  },
+  {
+    id: 2,
+    rank: 2,
+    username: 'ThunderBolt99',
+    displayName: 'Thunder Bolt',
+    avatar:
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=thunder2&backgroundColor=7c3aed',
+    totalStrikes: 14203,
+    winRate: 91.8,
+    level: 63,
+    title: '⛈️ Storm Lord',
+    isCurrentUser: false,
+    country: '🇯🇵',
+    streak: 89,
+    rankChange: 1,
+    lastSeen: '5 min ago',
+    badges: ['🌩️', '👑', '💎'],
+    powerLevel: 9340,
+  },
+  {
+    id: 3,
+    rank: 3,
+    username: 'ElectricAce',
+    displayName: 'Electric Ace',
+    avatar:
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=electric3&backgroundColor=ea580c',
+    totalStrikes: 13956,
+    winRate: 89.4,
+    level: 61,
+    title: '⚡ Volt Warrior',
+    isCurrentUser: false,
+    country: '🇰🇷',
+    streak: 67,
+    rankChange: -1,
+    lastSeen: '1 hour ago',
+    badges: ['⚡', '🛡️', '⭐'],
+    powerLevel: 8920,
+  },
+  {
+    id: 4,
+    rank: 4,
+    username: 'PikaDestroyer',
+    displayName: 'Pika Destroyer',
+    avatar:
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=pika4&backgroundColor=dc2626',
+    totalStrikes: 12834,
+    winRate: 87.9,
+    level: 58,
+    title: '🎯 Strike Specialist',
+    isCurrentUser: false,
+    country: '🇬🇧',
+    streak: 34,
+    rankChange: 2,
+    lastSeen: '15 min ago',
+    badges: ['🎯', '💥', '🚀'],
+    powerLevel: 8150,
+  },
+  {
+    id: 5,
+    rank: 5,
+    username: 'ZapKing777',
+    displayName: 'Zap King',
+    avatar:
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=zap5&backgroundColor=059669',
+    totalStrikes: 11792,
+    winRate: 85.6,
+    level: 55,
+    title: '👑 Thunder Sage',
+    isCurrentUser: false,
+    country: '🇩🇪',
+    streak: 23,
+    rankChange: 0,
+    lastSeen: '3 hours ago',
+    badges: ['👑', '🌟', '💫'],
+    powerLevel: 7680,
+  },
+  {
+    id: 6,
+    rank: 47,
+    username: 'YourUsername',
+    displayName: 'Rising Star',
+    avatar:
+      'https://api.dicebear.com/7.x/adventurer/svg?seed=you&backgroundColor=2563eb',
+    totalStrikes: 3247,
+    winRate: 72.3,
+    level: 28,
+    title: '🌟 Rising Striker',
+    isCurrentUser: true,
+    country: '🇲🇾',
+    streak: 12,
+    rankChange: 5,
+    lastSeen: 'Online',
+    badges: ['🌟', '🎮', '💪'],
+    powerLevel: 2890,
+  },
+];
 
 export default function HallOfFamePage() {
   const [selectedPeriod, setSelectedPeriod] = useState('all-time');
@@ -26,123 +145,6 @@ export default function HallOfFamePage() {
   const containerRef = useRef(null);
 
   // Enhanced mock data with more realistic profiles
-  const leaderboardData = [
-    {
-      id: 1,
-      rank: 1,
-      username: 'StrikeMaster3000',
-      displayName: 'Strike Master',
-      avatar:
-        'https://api.dicebear.com/7.x/adventurer/svg?seed=strike1&backgroundColor=1e40af',
-      totalStrikes: 15847,
-      winRate: 94.2,
-      level: 67,
-      title: '⚡ Lightning Champion',
-      isCurrentUser: false,
-      country: '🇺🇸',
-      streak: 156,
-      rankChange: 0,
-      lastSeen: '2 min ago',
-      badges: ['🏆', '⚡', '🔥'],
-      powerLevel: 9850,
-    },
-    {
-      id: 2,
-      rank: 2,
-      username: 'ThunderBolt99',
-      displayName: 'Thunder Bolt',
-      avatar:
-        'https://api.dicebear.com/7.x/adventurer/svg?seed=thunder2&backgroundColor=7c3aed',
-      totalStrikes: 14203,
-      winRate: 91.8,
-      level: 63,
-      title: '⛈️ Storm Lord',
-      isCurrentUser: false,
-      country: '🇯🇵',
-      streak: 89,
-      rankChange: 1,
-      lastSeen: '5 min ago',
-      badges: ['🌩️', '👑', '💎'],
-      powerLevel: 9340,
-    },
-    {
-      id: 3,
-      rank: 3,
-      username: 'ElectricAce',
-      displayName: 'Electric Ace',
-      avatar:
-        'https://api.dicebear.com/7.x/adventurer/svg?seed=electric3&backgroundColor=ea580c',
-      totalStrikes: 13956,
-      winRate: 89.4,
-      level: 61,
-      title: '⚡ Volt Warrior',
-      isCurrentUser: false,
-      country: '🇰🇷',
-      streak: 67,
-      rankChange: -1,
-      lastSeen: '1 hour ago',
-      badges: ['⚡', '🛡️', '⭐'],
-      powerLevel: 8920,
-    },
-    {
-      id: 4,
-      rank: 4,
-      username: 'PikaDestroyer',
-      displayName: 'Pika Destroyer',
-      avatar:
-        'https://api.dicebear.com/7.x/adventurer/svg?seed=pika4&backgroundColor=dc2626',
-      totalStrikes: 12834,
-      winRate: 87.9,
-      level: 58,
-      title: '🎯 Strike Specialist',
-      isCurrentUser: false,
-      country: '🇬🇧',
-      streak: 34,
-      rankChange: 2,
-      lastSeen: '15 min ago',
-      badges: ['🎯', '💥', '🚀'],
-      powerLevel: 8150,
-    },
-    {
-      id: 5,
-      rank: 5,
-      username: 'ZapKing777',
-      displayName: 'Zap King',
-      avatar:
-        'https://api.dicebear.com/7.x/adventurer/svg?seed=zap5&backgroundColor=059669',
-      totalStrikes: 11792,
-      winRate: 85.6,
-      level: 55,
-      title: '👑 Thunder Sage',
-      isCurrentUser: false,
-      country: '🇩🇪',
-      streak: 23,
-      rankChange: 0,
-      lastSeen: '3 hours ago',
-      badges: ['👑', '🌟', '💫'],
-      powerLevel: 7680,
-    },
-    {
-      id: 6,
-      rank: 47,
-      username: 'YourUsername',
-      displayName: 'Rising Star',
-      avatar:
-        'https://api.dicebear.com/7.x/adventurer/svg?seed=you&backgroundColor=2563eb',
-      totalStrikes: 3247,
-      winRate: 72.3,
-      level: 28,
-      title: '🌟 Rising Striker',
-      isCurrentUser: true,
-      country: '🇲🇾',
-      streak: 12,
-      rankChange: 5,
-      lastSeen: 'Online',
-      badges: ['🌟', '🎮', '💪'],
-      powerLevel: 2890,
-    },
-  ];
-
   const periods = [
     {
       key: 'all-time',
@@ -196,13 +198,14 @@ export default function HallOfFamePage() {
       }
     };
 
-    if (containerRef.current) {
-      containerRef.current.addEventListener('mousemove', handleMouseMove);
+    const currentRef = containerRef.current;
+    if (currentRef) {
+      currentRef.addEventListener('mousemove', handleMouseMove);
     }
 
     return () => {
-      if (containerRef.current) {
-        containerRef.current.removeEventListener('mousemove', handleMouseMove);
+      if (currentRef) {
+        currentRef.removeEventListener('mousemove', handleMouseMove);
       }
     };
   }, []);
@@ -486,7 +489,7 @@ export default function HallOfFamePage() {
                             isHovered ? 'animate-pulse' : ''
                           }`}
                         ></div>
-                        <img
+                        <Image
                           src={player.avatar}
                           alt={player.username}
                           className={`relative w-20 h-20 rounded-full border-4 border-slate-600/50 group-hover/avatar:border-purple-400/80 transition-all duration-300 ${

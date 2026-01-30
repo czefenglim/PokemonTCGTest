@@ -96,7 +96,7 @@ export default function NotFound() {
               transition={{ delay: 0.7 }}
               className="text-lg text-white/80 mb-8 leading-relaxed"
             >
-              The page you're looking for doesn't exist. It might have been
+              The page you&apos;re looking for doesn&apos;t exist. It might have been
               moved, deleted, or you entered the wrong URL.
             </motion.p>
 
@@ -235,7 +235,7 @@ export default function NotFound() {
             transition={{ delay: 2 }}
             className="mt-6 text-white/50 text-sm"
           >
-            Lost in the digital world? Don't worry, every trainer gets lost
+            Lost in the digital world? Don&apos;t worry, every trainer gets lost
             sometimes! 🗺️
           </motion.p>
         </motion.div>
